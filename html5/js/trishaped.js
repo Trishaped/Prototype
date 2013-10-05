@@ -29,6 +29,40 @@ function __sigma_event(layout, instance, context) {
 		instance.position(0, 0, 1).draw();
 	});
 
+	instance.bind('overnodes', function(event) {
+
+		var nodes = event.content;
+		var neighbors = {};
+
+		instance.iterEdges(function(e) {
+
+			if(nodes.indexOf(e.source) >= 0 || nodes.indexOf(e.target) >= 0) {
+				neighbors[e.source] = 1;
+				neighbors[e.target] = 1;
+			}
+
+		}).iterNodes(function(n) {
+			
+			if(!neighbors[n.id]) {
+				n.hidden = 1;
+			} else {
+				n.hidden = 0;
+			}
+
+		}).draw(2,2,2);
+
+	});
+
+	instance.bind('outnodes', function() {
+
+		instance.iterEdges(function(e) {
+			e.hidden = 0;
+		}).iterNodes(function(n) {
+			n.hidden = 0;
+		}).draw(2,2,2);
+
+	});
+
 }
 
 function __sigma_init() {
@@ -40,7 +74,7 @@ function __sigma_init() {
 		defaultLabelBGColor: '#fff',
 		defaultLabelHoverColor: '#000',
 		labelThreshold: 6,
-		defaultEdgeType: 'curve',
+		defaultEdgeType: 'line',
 		defaultEdgeArrow: 'target'
 	}).graphProperties({
 		minNodeSize: 6,
@@ -48,7 +82,7 @@ function __sigma_init() {
 		minEdgeSize: 1,
 		maxEdgeSize: 7
 	}).mouseProperties({
-		maxRatio: 32
+		maxRatio: 64
 	});
 
 	instance.addNode('hello', __node('Hello')).addNode('world', __node('World !')).addEdge('hello_world','hello','world');
@@ -60,8 +94,19 @@ function __sigma_init() {
 	instance.addNode('remy', __node('Rémy')).addEdge('3', 'remy', 'trishaped');
 	instance.addNode('thomas', __node('Thomas')).addEdge('4', 'thomas', 'trishaped');
 
+	// Resize Node
 	instance.iterNodes(function(node) {
-		node.size = node.outDegree;
+		node.size = (node.outDegree + node.inDegree) / 2;
+	});
+
+	// Resize Edge
+	instance.iterEdges(function(edge) {
+
+		var source = instance.getNodes(edge.source);
+		var target = instance.getNodes(edge.target);
+
+		edge.size = (source.size + target.size) / 2;
+
 	});
 
 	// Draw the graph
