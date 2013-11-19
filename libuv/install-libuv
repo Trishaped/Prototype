@@ -1,0 +1,11 @@
+#!/bin/sh
+
+apt-get install -y autotools-dev build-essential libtool automake 
+wget http://libuv.org/dist/v0.11.14/libuv-v0.11.14.tar.gz
+tar -xvf libuv-v0.11.14.tar.gz
+cd libuv-v0.11.14
+sh autogen.sh
+./configure
+make
+make check
+make install
