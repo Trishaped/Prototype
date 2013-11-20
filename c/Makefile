@@ -15,7 +15,7 @@ LIB_CORE_N=libchallengercore.so
 LIB_CORE_V=1.0
 
 CFLAGS_INCLUDE = -I./src/ -I./include -L$(LIBDIR) -Wl,-rpath,$(LIBDIR) -D_GNU_SOURCE
-CFLAGS += $(CFLAGS_INCLUDE) -Wall -Wextra -Werror -pedantic
+CFLAGS += $(CFLAGS_INCLUDE) -Wall -Wextra -Werror -pedantic -Wno-unused-parameter
 CFLAGS_DEBUG = $(CFLAGS) -O0 -g $(CFLAGS_DEBUG_EXTRA)
 CFLAGS_FAST = $(CFLAGS) -Os $(CFLAGS_FAST_EXTRA) -march=native \
  -mtune=generic -pipe -fstack-protector --param=ssp-buffer-size=4  \
@@ -80,9 +80,9 @@ challenger: src/main.o libmain.a libinfint.so libchallengercore.so
 	@cp bin/$@ .
 	@echo Compilation of $@ [DONE]
 
-trishaped: src/main.o
+trishaped: src/debug-main.o
 	mkdir -p bin/
-	$(CC) $(CPPFLAGS_FAST) $(CFLAGS_FAST) $< -luv -o bin/$@
+	$(CC) $(CPPFLAGS_DEBUG) $(CFLAGS_DEBUG) $< -luv -o bin/$@
 	cp bin/$@ .
 	@echo Compilation of $@ [DONE]
 
