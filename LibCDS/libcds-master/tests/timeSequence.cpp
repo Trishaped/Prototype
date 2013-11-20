@@ -107,8 +107,8 @@ void measure_rank(const Array & sigma, Sequence * seq) {
 
 int main(int argc, char **argv) {
     int c;
-    char *fname=NULL, *builderopt=NULL;
-    SequenceBuilder * sb = NULL;
+    char *fname=0, *builderopt=0;
+    SequenceBuilder * sb = 0;
     while((c=getopt(argc,argv,"f:b:q:"))!=-1) {
         switch(c) {
             case 'f': fname = optarg; break;
@@ -116,7 +116,7 @@ int main(int argc, char **argv) {
             case 'q': numqueries = atoi(optarg); break;
         }
     }
-    if(fname==NULL || builderopt==NULL) {
+    if(fname==0 || builderopt==0) {
         cout << "usage: " << argv[0] << " -f fname -b buildstr [-q numqueries]" << endl;
         return 0;
     }
