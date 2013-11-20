@@ -1,4 +1,4 @@
-package WaveletTree;
+package Data;
 import Jena_Mock.*;
 
 /**
