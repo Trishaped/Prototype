@@ -6,8 +6,8 @@ CPPFLAGS=-g3 -Wall -O0 -I../includes/
 INCS=-I../includes/
 LIB=../lib/libcds.a
 
-OBJECTS= testG.o testL.o testArray.o testBitSequence.o testQuantile.o testHuffman.o timeSequence.o toArray.o toArray2.o
-BIN= testG testL testArray testBitSequence testHuffman timeSequence toArray toArray2 testQuantile
+OBJECTS= testG.o testArray.o testBitSequence.o testQuantile.o testHuffman.o timeSequence.o toArray.o toArray2.o
+BIN= testG testArray testBitSequence testHuffman timeSequence toArray toArray2 testQuantile
 
 %.o: %.cpp
 	@echo " [C++] Compiling $<"
@@ -21,10 +21,6 @@ all: clean $(OBJECTS) $(BIN)
 testG:
 	@echo " [LNK] Building testG"
 	@$(CPP) $(CPPFLAGS) -o testG testG.o $(LIB)
-
-testL:
-	@echo " [LNK] Building testG"
-	@$(CPP) $(CPPFLAGS) -o testL testL.o $(LIB)
 
 testHuffman:
 	@echo " [LNK] Building testHuffman"
