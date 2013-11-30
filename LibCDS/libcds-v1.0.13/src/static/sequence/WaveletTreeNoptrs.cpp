@@ -385,7 +385,7 @@ namespace cds_static
 				count = pos - start + before - bitstring[level]->rank1(pos) + 1;
 				masked += (1 << (height - level - 1)); 
 				pos = count + start - 1;
-			
+			}
 
 		/*	if (count == 0) return 0;
 			deep--;
@@ -400,14 +400,14 @@ namespace cds_static
 	size_t WaveletTreeNoptrs::select(uint symbol, size_t j) const
 	{
 /*		symbol = am->map(symbol);
-		
+
 		uint mask = (1 << height) - 2;
 		uint sum = 2;
-		
+
 		size_t pos = j;
 
 		for (int level = height - 1; level >= 0; level--) {
-			
+
 			size_t start = get_start(symbol, mask);
 			size_t end = min(static_cast<size_t>(max_v), start + sum);
 			start = OCC[start];
@@ -425,7 +425,7 @@ namespace cds_static
 
 			mask <<= 1;
 			sum <<= 1;
-			
+
 		}
 
 		return pos - 1;*/

@@ -1,7 +1,7 @@
 
 CPP=g++
 
-#CPPFLAGS=-g3 -Wall -O0 -I../includes/ 
+CPPFLAGS=-g3 -Wall -O0 -I../includes/ 
 #CPPFLAGS=-O3 -Wall -DNDEBUG -I../includes/
 INCS=-I../includes/
 LIB=../lib/libcds.a
@@ -13,15 +13,14 @@ BIN= testG testArray testBitSequence testHuffman timeSequence toArray toArray2 t
 	@echo " [C++] Compiling $<"
 	@$(CPP) $(CPPFLAGS) $(INCS) -c $< -o $@
 
-all: clean testG.o testG 
-#$(OBJECTS) $(BIN)
+all: clean $(OBJECTS) $(BIN)
+#clean testG.o testG        #l'ancien make all ne compilais pas tout
 	@echo " [MSG] Done compiling tests"
 	@echo " [FLG] $(CPPFLAGS)"
 
 testG:
 	@echo " [LNK] Building testG"
 	@$(CPP) $(CPPFLAGS) -o testG testG.o $(LIB)
-
 
 testHuffman:
 	@echo " [LNK] Building testHuffman"
