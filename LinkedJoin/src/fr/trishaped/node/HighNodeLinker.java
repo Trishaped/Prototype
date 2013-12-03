@@ -37,8 +37,6 @@ final class HighNodeLinker implements NodeLinker {
 			hasLink.add(box);
 		}
 		
-		hasLink.remove(instance.getContainerName());
-		
 		for(Node node : links) {
 
 			hasLink.remove(node.getContainerName());
