@@ -50,22 +50,12 @@ final class NodeContainer {
 		nodes.remove(node);
 	}
 
-	void hasInserted() {
-		
+	void exclude() {
 		exclude = true;
-		System.out.println(this + " has flags exclude");
-		
 	}
 
-	void hasLinked() {
-		
+	void unlink() {
 		unlink = true;
-		System.out.println(this + " has flags unlink");
-		
-	}
-	
-	boolean shouldUnlink() {
-		return unlink;
 	}
 	
 	void clean() {

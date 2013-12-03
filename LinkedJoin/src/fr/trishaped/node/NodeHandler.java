@@ -47,7 +47,7 @@ public final class NodeHandler implements Cleanable {
 			}
 			
 			for(String box : loop) {
-				containers.get(box).hasInserted();
+				containers.get(box).exclude();
 			}
 			
 			request();
@@ -80,8 +80,8 @@ public final class NodeHandler implements Cleanable {
 			}
 			
 			for(String box : loop) {
-				containers.get(box).hasInserted();
-				containers.get(box).hasLinked();
+				containers.get(box).exclude();
+				containers.get(box).unlink();
 			}
 			
 			request();
@@ -126,13 +126,15 @@ public final class NodeHandler implements Cleanable {
 	public void onClean() {
 		synchronized (lock) {
 			
-			for(Entry<String, NodeContainer> entry : containers.entrySet()) {
-				
-				NodeContainer container = entry.getValue();
-				container.clean();
-				
+			if(dirty) {
+				for(Entry<String, NodeContainer> entry : containers.entrySet()) {
+					
+					NodeContainer container = entry.getValue();
+					container.clean();
+					
+				}
 			}
-			
+
 			dirty = false;
 			lock.notifyAll();
 		}
