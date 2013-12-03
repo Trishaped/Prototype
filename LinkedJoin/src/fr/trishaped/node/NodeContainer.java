@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public final class NodeContainer {
+final class NodeContainer {
 	
 	private final String name;
 	private final Map<Long, Node> nodes;
@@ -15,17 +15,17 @@ public final class NodeContainer {
 	private volatile boolean exclude;
 	private volatile boolean unlink;
 
-	public NodeContainer(String name) {
+	NodeContainer(String name) {
 		this.name = name;
 		this.nodes = new HashMap<>();
 		this.links = new String[0];
 	}
 
-	public String getName() {
+	String getName() {
 		return name;
 	}
 	
-	public boolean add(Node node) {
+	boolean add(Node node) {
 		
 		Long identifier = Long.valueOf(node.getIdentifier());
 		
@@ -41,34 +41,34 @@ public final class NodeContainer {
 		return true;
 	}
 	
-	public Node get(Long identifier) {
+	Node get(Long identifier) {
 		return nodes.get(identifier);
 	}
 	
-	public void remove(Node node) {
+	void remove(Node node) {
 		System.err.println("Delete: "+node);
 		nodes.remove(node);
 	}
 
-	public void hasInserted() {
+	void hasInserted() {
 		
 		exclude = true;
 		System.out.println(this + " has flags exclude");
 		
 	}
 
-	public void hasLinked() {
+	void hasLinked() {
 		
 		unlink = true;
 		System.out.println(this + " has flags unlink");
 		
 	}
 	
-	public boolean shouldUnlink() {
+	boolean shouldUnlink() {
 		return unlink;
 	}
 	
-	public void clean() {
+	void clean() {
 		if(unlink) {
 			
 			Iterator<Entry<Long, Node>> iterator = nodes.entrySet().iterator();
@@ -99,7 +99,7 @@ public final class NodeContainer {
 		return "Container: "+name;
 	}
 
-	public void link(String container) {
+	void link(String container) {
 		
 		for(String link : links) {
 			if(link.equals(container)) {

@@ -1,26 +1,26 @@
 package fr.trishaped.node;
 
-
-public final class Node implements NodeLinker {
+final class Node implements NodeLinker {
 
 	private final NodeContainer container;
 	private final long id;
 	private final NodeLinker links;
 
-	public Node(NodeContainer box, long id) {
+	Node(NodeContainer box, long id) {
 		this.container = box;
 		this.id = id;
 		this.links = new HighNodeLinker(this);
 	}
 
-	public String getContainerName() {
+	String getContainerName() {
 		return container.getName();
 	}
 	
-	public long getIdentifier() {
+	long getIdentifier() {
 		return id;
 	}
-
+	
+	@Override
 	public void link(Node node) {
 		
 		System.err.println("Link : "+this+" with "+node);
@@ -29,6 +29,7 @@ public final class Node implements NodeLinker {
 		container.link(node.getContainerName());
 	}
 	
+	@Override
 	public void unlink(Node node) {
 		
 		System.err.println("Unlink : "+this+" with "+node);

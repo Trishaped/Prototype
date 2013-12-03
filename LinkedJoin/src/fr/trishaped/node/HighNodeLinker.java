@@ -4,12 +4,12 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public final class HighNodeLinker implements NodeLinker {
+final class HighNodeLinker implements NodeLinker {
 
 	private final LinkedHashSet<Node> links;
 	private final Node instance;
 	
-	public HighNodeLinker(Node instance) {
+	HighNodeLinker(Node instance) {
 		 this.links = new LinkedHashSet<>();
 		 this.instance = instance;
 	}

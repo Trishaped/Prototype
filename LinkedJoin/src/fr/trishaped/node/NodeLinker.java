@@ -1,6 +1,6 @@
 package fr.trishaped.node;
 
-public interface NodeLinker {
+interface NodeLinker {
 
 	public void link(Node node);
 	
