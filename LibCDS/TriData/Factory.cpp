@@ -63,7 +63,7 @@ void Factory::addTriplet(uint s, uint p, uint o, bool isConcept){
  * Get the core TriData
  */
 TriData* Factory::get(){
-	return NULL;
+	return new TriData(makeBitSequence(*Bp), makeBitSequence(*Bo), makeBitSequence(*Bc), makeTree(*WTp), makeTree(*WToi), makeTree(*WToc));
 }
 
 

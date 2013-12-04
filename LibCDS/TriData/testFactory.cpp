@@ -77,6 +77,9 @@ int main(int argc, char ** argv) {
 
 	TriData* triData = factory->get();
 
+	Triplet *triplet = triData->access(0);
+	cout << "Subject: " << triplet->subject << " Predicat: " << triplet->predicat << " Object: " << triplet->object << endl;
+
 	return 0;
 }
 
