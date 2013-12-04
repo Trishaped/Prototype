@@ -62,20 +62,20 @@ void test(WaveletTree & wt){
 
 
 int main(int argc, char ** argv) {
-	vector<uint> v;
-    v.push_back(1);
-    v.push_back(3);
-	v.push_back(4);
-	v.push_back(5);
-	v.push_back(8);
-	v.push_back(1);
-	v.push_back(3);
-	v.push_back(4);
-	v.push_back(5);
-	v.push_back(8);
-	Array array(v,8);
 
-	Factory* factory = new Factory((uint)10);
+	uint size = 20;
+	uint maxValue = 20;
+
+	Factory* factory = new Factory(size, maxValue);
+
+	factory->addTriplet(1 ,2 , 3, true);
+	factory->addTriplet(1 ,2 , 3, false);
+	factory->addTriplet(2 ,1 , 1, true);
+	factory->addTriplet(2 ,1 , 1, false);
+	factory->addTriplet(3 ,1 , 1, true);
+	factory->addTriplet(3 ,2 , 3, false);
+
+	TriData* triData = factory->get();
 
 	return 0;
 }

@@ -17,16 +17,10 @@ namespace cds_static
 	class TriData
 	{
 		public:
-		TriData();
+		TriData(BitSequence* Bp, BitSequence* Bo, BitSequence* Bc, WaveletTree* Wtoi, WaveletTree* WToc, WaveletTree* WToi);
 
 
 		protected:
-		/* ?? A quoi servent ces facteurs... ?? */
-		const static uint RGFactor = 20;
-		const static uint RRRsample_Rate= 32;
-
-
-
 
 		/**
 		 * BitSequence

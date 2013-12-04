@@ -8,7 +8,7 @@
 #include <Mapper.h>
 #include <Sequence.h>
 
-#include <TriData.h>
+#include "TriData.h"
 
 using namespace std;
 
@@ -23,12 +23,12 @@ namespace cds_static
 		/**
 		 * 	Create the factory for TriData
 		 */
-		Factory(uint size);
+		Factory(uint size, uint maxValue);
 
 		/**
 		 * Add a triplet to the factory
 		 */
-		void addTriplet(uint s, uint p, uint o);
+		void addTriplet(uint s, uint p, uint o, bool isConcept);
 
 		/**
 		 * Get the core TriData
@@ -43,16 +43,15 @@ namespace cds_static
 
 
 		/**
-		 * Size of the factory
-		 */
-		uint size;
-
-		/**
 		 * BitString used to map BitSequence
 		 */
 		BitString *Bp;
 		BitString *Bo;
 		BitString *Bc;
+
+		uint BpCurrentIndex;
+		uint BoCurrentIndex;
+		uint BcCurrentIndex;
 
 		/**
 		 * Arrays used to makes the WaveletTrees
@@ -60,6 +59,31 @@ namespace cds_static
 		Array *WTp;
 		Array *WToi;
 		Array *WToc;
+
+		uint WTpCurrentIndex;
+		uint WToiCurrentIndex;
+		uint WTocCurrentIndex;
+
+
+		/**
+		 * temporary variable
+		 */
+		uint previousSubject;
+		uint previousPredicat;
+
+
+		/**
+		 * Factor for the conversion in BitSequence
+		 */
+		const static uint BitSequenceSampleRate = 20;
+
+		/*
+		 * Factor for the conversion in WaveletTree
+		 */
+		const static uint RGFactor = 20;
+		const static uint RRRsample_Rate= 32;
+
+
 
 		/**
 		 *	Make a bitSequence with a bitString

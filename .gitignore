@@ -1,2 +1,4 @@
 .metadata
 *.class
+*.o
+LibCDS/libcds-v1.0.13/includes

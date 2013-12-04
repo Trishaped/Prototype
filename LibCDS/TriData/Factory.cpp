@@ -7,14 +7,55 @@ namespace cds_static
 /**
  * 	Create the factory for TriData
  */
-Factory::Factory(uint size){
-	this->size = size;
+Factory::Factory(uint size, uint maxValue){
+	Bp = new BitString(size);
+	Bo = new BitString(size);
+	Bc = new BitString(size);
+
+	WTp = new Array(size, maxValue);
+	WToi = new Array(size, maxValue);
+	WToc = new Array(size, maxValue);
+
+
+	BpCurrentIndex = 0;
+	BoCurrentIndex = 0;
+	BcCurrentIndex = 0;
+
+	WTpCurrentIndex = 0;
+	WToiCurrentIndex = 0;
+	WTocCurrentIndex = 0;
+
+
+	previousSubject = 0;
+	previousPredicat = 0;
 }
 
 /**
  * Add a triplet to the factory
  */
-void Factory::addTriplet(uint s, uint p, uint o){
+void Factory::addTriplet(uint s, uint p, uint o, bool isConcept){
+
+	/* Subjects */
+	bool isDifferentSubject = (previousSubject!=s || BpCurrentIndex==0);
+	if(isDifferentSubject)
+		previousSubject = s;
+	Bp->setBit(BpCurrentIndex++, isDifferentSubject);
+
+
+	/* Predicats */
+	WTp->setField(WTpCurrentIndex++, p);
+	bool isDifferentPredicat = (previousPredicat!=s || BoCurrentIndex==0);
+	if(isDifferentSubject)
+		previousPredicat = s;
+	Bo->setBit(BoCurrentIndex++, isDifferentPredicat);
+
+
+	/* Objects */
+	Bc->setBit(BcCurrentIndex++, isConcept);
+	if(isConcept)
+		WToc->setField(WTocCurrentIndex, o);
+	else
+		WToi->setField(WToiCurrentIndex, o);
 
 }
 
@@ -29,7 +70,7 @@ TriData* Factory::get(){
 /** Builds a Wavelet Tree with an array
  *  @param array to create the waveletTree
  */
-WaveletTree* TriData::makeTree(Array array){
+WaveletTree* Factory::makeTree(Array array){
 
 	/* BitSequence builder for BitSequenceRG */
 	BitSequenceBuilder *bitSequenceBuilder = new BitSequenceBuilderRG(RGFactor);
@@ -56,8 +97,8 @@ WaveletTree* TriData::makeTree(Array array){
 /**
  *	Make a bitSequence with a bitString
  */
-BitSequence* makeBitSequence(BitString bitString){
-	return new BitSequenceRG(bitString, 20/*uint sample_rate=DEFAULT_SAMPLING*/);
+BitSequence* Factory::makeBitSequence(BitString bitString){
+	return new BitSequenceRG(bitString, BitSequenceSampleRate);
 }
 
 }
