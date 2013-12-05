@@ -7,15 +7,14 @@ namespace cds_static
 /**
  * 	Create the factory for TriData
  */
-Factory::Factory(uint size, uint maxValue){
-	Bp = new BitString(size);
-	Bo = new BitString(size);
-	Bc = new BitString(size);
+Factory::Factory(uint firstLayerSize, uint secondLayerSize, uint maxValue){
+	Bp = new BitString(firstLayerSize);
+	Bo = new BitString(secondLayerSize);
+	Bc = new BitString(secondLayerSize);
 
-	WTp = new Array(size, maxValue);
-	WToi = new Array(size, maxValue);
-	WToc = new Array(size, maxValue);
-
+	WTp = new Array(firstLayerSize, maxValue);
+	WToi = new Array(secondLayerSize, maxValue);
+	WToc = new Array(secondLayerSize, maxValue);
 
 	BpCurrentIndex = 0;
 	BoCurrentIndex = 0;
@@ -25,42 +24,93 @@ Factory::Factory(uint size, uint maxValue){
 	WToiCurrentIndex = 0;
 	WTocCurrentIndex = 0;
 
-
 	previousSubject = 0;
 	previousPredicat = 0;
+	previousObject = 0;
 }
 
 /**
  * Add a triplet to the factory
  */
-void Factory::addTriplet(uint s, uint p, uint o, bool isConcept){
+void Factory::addTriplet(uint subject, uint predicat, uint object, bool isConcept){
+	testParameters(subject, predicat, object);
 
-	/* Subjects */
-	bool isDifferentSubject = (previousSubject!=s || BpCurrentIndex==0);
+	/**
+	 * Diff with previous values
+	 */
+	bool isDifferentSubject = (previousSubject!=subject || BpCurrentIndex==0);
 	if(isDifferentSubject)
-		previousSubject = s;
-	Bp->setBit(BpCurrentIndex++, isDifferentSubject);
+		previousSubject = subject;
 
-
-	/* Predicats */
-	WTp->setField(WTpCurrentIndex++, p);
-	bool isDifferentPredicat = (previousPredicat!=s || BoCurrentIndex==0);
+	bool isDifferentPredicat = (previousPredicat!=predicat || BoCurrentIndex==0);
 	if(isDifferentSubject)
-		previousPredicat = s;
+		previousPredicat = predicat;
+
+	bool isDifferentObject = (previousObject!=predicat || BcCurrentIndex==0);
+	if(isDifferentObject)
+		previousObject = object;
+
+
+	/**
+	 * Only if its a different predicat, we modify the first layer
+	 */
+	if(isDifferentPredicat){
+		// Subjects Bitmap
+		Bp->setBit(BpCurrentIndex++, isDifferentSubject);
+
+		// Predicats Tree
+		WTp->setField(WTpCurrentIndex++, predicat);
+	}
+
+	/**
+	 * For each triplet an object is added
+	 */
+	// Objects Bitmap
 	Bo->setBit(BoCurrentIndex++, isDifferentPredicat);
-
-
-	/* Objects */
+	// Concept Bitmap
 	Bc->setBit(BcCurrentIndex++, isConcept);
+
+	// Concept or Instance Tree
 	if(isConcept)
-		WToc->setField(WTocCurrentIndex, o);
+		WToc->setField(WTocCurrentIndex++, object);
 	else
-		WToi->setField(WToiCurrentIndex, o);
+		WToi->setField(WToiCurrentIndex++, object);
 
 }
 
 /**
+ * Renvoi true si tout les paramètres sont bon
+ */
+void Factory::testParameters(uint s, uint p, uint o){
+
+	// Good sort tests
+	if(s<previousSubject)
+		throw new Exception(Stream() << "Sort error on subject (Triplet: " << s << ", " << p << ", " << o << ")");
+
+	if(s<=previousSubject && p<previousPredicat)
+		throw new Exception(Stream() << "Sort error on subject or predicat (Triplet: " << s << ", " << p << ", " << o << ")");
+
+	if(s<=previousSubject && p<=previousPredicat && o<=previousObject && BpCurrentIndex>0)
+		throw new Exception(Stream() << "Sort error on subject or predicat or object (Triplet: " << s << ", " << p << ", " << o << ")");
+
+
+	// Doublon
+	if(s==previousSubject && p==previousPredicat && o==previousObject && BpCurrentIndex>0)
+		throw new Exception(Stream() << "Doublon (Triplet: " << s << ", " << p << ", " << o << ")");
+
+	// Hole in subjects list
+	if(s>previousSubject+1)
+		throw new Exception(Stream() << "Hole (Triplet: " << s << ", " << p << ", " << o << ")");
+
+
+	/*
+	 * TODO other tests
+	 */
+}
+
+/**
  * Get the core TriData
+ * return a well construct TriData
  */
 TriData* Factory::get(){
 	return new TriData(makeBitSequence(*Bp), makeBitSequence(*Bo), makeBitSequence(*Bc), makeTree(*WTp), makeTree(*WToi), makeTree(*WToc));
