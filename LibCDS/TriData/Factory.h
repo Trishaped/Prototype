@@ -9,6 +9,7 @@
 #include <Sequence.h>
 
 #include "TriData.h"
+#include "Exception.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ namespace cds_static
 		/**
 		 * 	Create the factory for TriData
 		 */
-		Factory(uint size, uint maxValue);
+		Factory(uint size, uint secondLayerSize, uint maxValue);
 
 		/**
 		 * Add a triplet to the factory
@@ -32,6 +33,7 @@ namespace cds_static
 
 		/**
 		 * Get the core TriData
+		 * return a well construct TriData
 		 */
 		TriData *get();
 
@@ -43,33 +45,38 @@ namespace cds_static
 
 
 		/**
-		 * BitString used to map BitSequence
+		 * BitString used to construct the bitmaps
 		 */
 		BitString *Bp;
 		BitString *Bo;
 		BitString *Bc;
 
+		//their current index
 		uint BpCurrentIndex;
 		uint BoCurrentIndex;
 		uint BcCurrentIndex;
 
+
 		/**
-		 * Arrays used to makes the WaveletTrees
+		 * Arrays used to constructs the WaveletTrees
 		 */
 		Array *WTp;
 		Array *WToi;
 		Array *WToc;
 
+		//their current index
 		uint WTpCurrentIndex;
 		uint WToiCurrentIndex;
 		uint WTocCurrentIndex;
 
 
 		/**
-		 * temporary variable
+		 * temporary variable (used to make some verifications)
 		 */
 		uint previousSubject;
 		uint previousPredicat;
+		uint previousObject;
+
 
 
 		/**
@@ -77,23 +84,30 @@ namespace cds_static
 		 */
 		const static uint BitSequenceSampleRate = 20;
 
+		/**
+		 *	Make a bitSequence with a bitString
+		 */
+		BitSequence* makeBitSequence(BitString bitString);
+
+
+
 		/*
 		 * Factor for the conversion in WaveletTree
 		 */
 		const static uint RGFactor = 20;
 		const static uint RRRsample_Rate= 32;
 
-
-
-		/**
-		 *	Make a bitSequence with a bitString
-		 */
-		BitSequence* makeBitSequence(BitString bitString);
-
 		/**
 		 * Make a tree with an Array
 		 */
 		WaveletTree* makeTree(Array array);
 
+
+
+
+		/**
+		 * Test the added triplet
+		 */
+		void testParameters(uint s, uint p, uint o);
 	};
 }

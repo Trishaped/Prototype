@@ -22,12 +22,31 @@ namespace cds_static
 		uint object;
 	};
 
+	/**
+	 * 	## The CORE ###
+	 * 	Contains:
+	 * 	3 WaveletTree and
+	 * 	3 BitSequence
+	 *
+	 * 	Method:
+	 * 	TriData() //Use Factory to do that
+	 * 	access(i)
+	 */
 	class TriData
 	{
 		public:
 
+		/**
+		 * 	Constructor for TriData core
+		 * 	See Factory for construction details
+		 */
 		TriData(BitSequence* Bp, BitSequence* Bo, BitSequence* Bc, WaveletTree* Wtp, WaveletTree* WToi, WaveletTree* WToc);
-		Triplet* access(int pos);
+
+		/**
+		 * access method on the structure
+		 * @param pos: triplet position in the structure
+		 */
+		Triplet* access(uint pos);
 
 		protected:
 

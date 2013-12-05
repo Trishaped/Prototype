@@ -4,6 +4,10 @@
 namespace cds_static
 {
 
+/**
+ * 	Constructor for TriData core
+ * 	See Factory for construction details
+ */
 TriData::TriData(BitSequence* Bp, BitSequence* Bo, BitSequence* Bc, WaveletTree* WTp, WaveletTree* WToi, WaveletTree* WToc){
 	this->Bp = Bp;
 	this->Bo = Bo;
@@ -14,13 +18,15 @@ TriData::TriData(BitSequence* Bp, BitSequence* Bo, BitSequence* Bc, WaveletTree*
 	this->WToc = WToc;
 }
 
-Triplet* TriData::access(int pos){
+
+/**
+ * access method on the structure
+ * @param pos: triplet position in the structure
+ */
+Triplet* TriData::access(uint pos){
 	Triplet* triplet = new Triplet();
 
-	triplet->subject = Bp->rank1(pos);
-
-	triplet->predicat = WTp->access(pos);
-
+	/*	We begin by the bottom of the data structure */
 	bool isConcept = Bc->access(pos);
 	uint nbConcept = Bc->rank1(pos);
 	if(isConcept)
@@ -28,8 +34,13 @@ Triplet* TriData::access(int pos){
 	else
 		triplet->object = WToi->access(pos - nbConcept);
 
-	return triplet;
 
+	/*	Then we find the predicat and the subject associated */
+	uint nbPre = Bo->rank1(pos);
+	triplet->predicat = WTp->access(nbPre-1);
+	triplet->subject = Bp->rank1(nbPre-1);
+
+	return triplet;
 }
 
 
