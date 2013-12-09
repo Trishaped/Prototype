@@ -7,33 +7,40 @@ namespace cds_static
 /**
  * 	Create the factory for TriData
  */
-Factory::Factory(uint firstLayerSize, uint secondLayerSize, uint maxValue){
-	Bp = new BitString(firstLayerSize);
-	Bo = new BitString(secondLayerSize);
-	Bc = new BitString(secondLayerSize);
+Factory::Factory(uint coupleSPCount, uint tripletCount, uint tripletConceptCount, uint maxPredicat, uint maxInstance, uint maxConcepts){
+	this->Bp = new BitString(coupleSPCount);
+	this->Bo = new BitString(tripletCount);
+	this->Bc = new BitString(tripletCount);
 
-	WTp = new Array(firstLayerSize, maxValue);
-	WToi = new Array(secondLayerSize, maxValue);
-	WToc = new Array(secondLayerSize, maxValue);
+	this->WTp = new Array(coupleSPCount, maxPredicat);
+	this->WToi = new Array(tripletCount - tripletConceptCount, maxInstance);
+	this->WToc = new Array(tripletConceptCount, maxConcepts);
 
-	BpCurrentIndex = 0;
-	BoCurrentIndex = 0;
-	BcCurrentIndex = 0;
+	this->coupleSPCount = coupleSPCount;
+	this->tripletCount = tripletCount;
+	this->tripletConceptCount = tripletConceptCount;
+	this->maxPredicat = maxPredicat;
+	this->maxInstance = maxInstance;
+	this->maxConcepts = maxConcepts;
 
-	WTpCurrentIndex = 0;
-	WToiCurrentIndex = 0;
-	WTocCurrentIndex = 0;
+	this->BpCurrentIndex = 0;
+	this->BoCurrentIndex = 0;
+	this->BcCurrentIndex = 0;
 
-	previousSubject = 0;
-	previousPredicat = 0;
-	previousObject = 0;
+	this->WTpCurrentIndex = 0;
+	this->WToiCurrentIndex = 0;
+	this->WTocCurrentIndex = 0;
+
+	this->previousSubject = 0;
+	this->previousPredicat = 0;
+	this->previousObject = 0;
 }
 
 /**
  * Add a triplet to the factory
  */
 void Factory::addTriplet(uint subject, uint predicat, uint object, bool isConcept){
-	testParameters(subject, predicat, object);
+	testParameters(subject, predicat, object, isConcept);
 
 	/**
 	 * Diff with previous values
@@ -81,7 +88,7 @@ void Factory::addTriplet(uint subject, uint predicat, uint object, bool isConcep
 /**
  * Renvoi true si tout les paramètres sont bon
  */
-void Factory::testParameters(uint s, uint p, uint o){
+void Factory::testParameters(uint s, uint p, uint o, bool isConcept){
 
 	// Good sort tests
 	if(s<previousSubject)
@@ -103,6 +110,30 @@ void Factory::testParameters(uint s, uint p, uint o){
 		throw new Exception(Stream() << "Hole (Triplet: " << s << ", " << p << ", " << o << ")");
 
 
+	//Overflow on bitmaps
+	if(BpCurrentIndex > Bp->getLength())
+		throw new Exception(Stream() <<  "Overflow on predicates bitmap (Triplet: " << s << ", " << p << ", " << o << ")");
+	if(BoCurrentIndex > Bo->getLength())
+		throw new Exception(Stream() <<  "Overflow on objects bitmap (Triplet: " << s << ", " << p << ", " << o << ")");
+	if(BcCurrentIndex > Bc->getLength())
+		throw new Exception(Stream() <<  "Overflow on concepts bitmap (Triplet: " << s << ", " << p << ", " << o << ")");
+
+	//Overflow on trees
+	if(WTpCurrentIndex > WTp->getLength())
+		throw new Exception(Stream() <<  "Overflow on predicates tree (Triplet: " << s << ", " << p << ", " << o << ")");
+	if(WToiCurrentIndex > WToi->getLength())
+			throw new Exception(Stream() <<  "Overflow on instances tree (Triplet: " << s << ", " << p << ", " << o << ")");
+	if(WTocCurrentIndex > WToc->getLength())
+			throw new Exception(Stream() <<  "Overflow on concepts tree (Triplet: " << s << ", " << p << ", " << o << ")");
+
+	//value superior to max value on trees
+	if(p > maxPredicat)
+		throw new Exception(Stream() <<  "Predicate (" << p << ") superior to maxValue (" << maxPredicat << ") on predicates tree (Triplet: " << s << ", " << p << ", " << o << ")");
+	if(isConcept && o > maxConcepts)
+		throw new Exception(Stream() <<  "Concept (" << o << ") superior to maxValue (" << maxConcepts << ") on concepts tree (Triplet: " << s << ", " << p << ", " << o << ")");
+	else if(!isConcept && o > maxInstance)
+		throw new Exception(Stream() <<  "Instance (" << o << ") superior to maxValue (" << maxInstance << ") on instances tree (Triplet: " << s << ", " << p << ", " << o << ")");
+
 	/*
 	 * TODO other tests
 	 */
@@ -117,7 +148,8 @@ TriData* Factory::get(){
 }
 
 
-/** Builds a Wavelet Tree with an array
+/**
+ * 	Builds a Wavelet Tree with an array
  *  @param array to create the waveletTree
  */
 WaveletTree* Factory::makeTree(Array array){

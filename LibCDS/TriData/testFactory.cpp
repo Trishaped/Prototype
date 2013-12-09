@@ -5,6 +5,7 @@
 
 #include "TriData.h"
 #include "Factory.h"
+#include "FileReader.h"
 
 using namespace std;
 using namespace cds_static;
@@ -13,14 +14,18 @@ using namespace cds_static;
 int main(int argc, char ** argv) {
 	try{
 
-		uint firstLayer = 5;
-		uint secondLayer = 8;
-		uint maxValue = 5;
+		/*  Some variables, must correspond to inserted triplets  */
+		uint coupleSP = 3;
+		uint tripletsCount = 8;
+		uint tripletsConceptCount = 6;
+		uint maxPredicate = 2;
+		uint maxInstance = 4;
+		uint maxConcept = 5;
 
 		/*	Create the Factory */
-		Factory* factory = new Factory(firstLayer, secondLayer, maxValue);
+		Factory* factory = new Factory(coupleSP, tripletsCount, tripletsConceptCount, maxPredicate, maxInstance, maxConcept);
 
-		/*	Add some triplets (s,p,o,isPredicat) */
+		/*	Add some triplets (s,p,o,isConcept) */
 		factory->addTriplet(1 ,2 , 2, true);
 		factory->addTriplet(1 ,2 , 3, true);
 		factory->addTriplet(1 ,2 , 4, true);
@@ -28,13 +33,13 @@ int main(int argc, char ** argv) {
 		factory->addTriplet(2 ,1 , 1, true);
 		factory->addTriplet(2 ,1 , 2, false);
 		factory->addTriplet(3 ,2 , 1, true);
-		factory->addTriplet(3 ,2 , 3, false);
+		factory->addTriplet(3 ,2 , 4, false);
 
 		/*	Make the Core */
 		TriData* triData = factory->get();
 
 		/*	Some tests	*/
-		for(int i=0; i<secondLayer; i++){
+		for(uint i=0; i<tripletsCount; i++){
 			Triplet *triplet = triData->access(i);
 			cout << "access(" << i << ") => (" << triplet->subject << ", " << triplet->predicat << ", " << triplet->object << ")" << endl;
 		}

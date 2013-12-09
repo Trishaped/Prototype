@@ -23,8 +23,11 @@ namespace cds_static
 
 		/**
 		 * 	Create the factory for TriData
+		 * 	@param coupleSPCount number of couple subject/predicate
+		 * 	@param tripletCount number of triplets
+		 * 	@param maxValue max value of triplets
 		 */
-		Factory(uint size, uint secondLayerSize, uint maxValue);
+		Factory(uint coupleSPCount, uint tripletCount, uint tripletConceptCount, uint maxPredicat, uint maxInstance, uint maxConcepts);
 
 		/**
 		 * Add a triplet to the factory
@@ -51,12 +54,6 @@ namespace cds_static
 		BitString *Bo;
 		BitString *Bc;
 
-		//their current index
-		uint BpCurrentIndex;
-		uint BoCurrentIndex;
-		uint BcCurrentIndex;
-
-
 		/**
 		 * Arrays used to constructs the WaveletTrees
 		 */
@@ -64,11 +61,27 @@ namespace cds_static
 		Array *WToi;
 		Array *WToc;
 
-		//their current index
+		/**
+		 * 	Values passed to the constructor
+		 */
+		uint coupleSPCount;
+		uint tripletCount;
+		uint tripletConceptCount;
+		uint maxPredicat;
+		uint maxInstance;
+		uint maxConcepts;
+
+		/**
+		 * 	Currents indexes
+		 */
+		//Bitmap current indexes
+		uint BpCurrentIndex;
+		uint BoCurrentIndex;
+		uint BcCurrentIndex;
+		//Tree current indexes
 		uint WTpCurrentIndex;
 		uint WToiCurrentIndex;
 		uint WTocCurrentIndex;
-
 
 		/**
 		 * temporary variable (used to make some verifications)
@@ -108,6 +121,6 @@ namespace cds_static
 		/**
 		 * Test the added triplet
 		 */
-		void testParameters(uint s, uint p, uint o);
+		void testParameters(uint s, uint p, uint o, bool isConcept);
 	};
 }
