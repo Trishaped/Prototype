@@ -4,7 +4,7 @@
 #include <Sequence.h>
 
 #include "TriData.h"
-#include "Factory.h"
+#include "RDFStoreFactory.h"
 #include "FileReader.h"
 
 using namespace std;

@@ -1,5 +1,5 @@
 
-#include "Factory.h"
+#include "RDFStoreFactory.h"
 
 namespace cds_static
 {
@@ -7,7 +7,7 @@ namespace cds_static
 /**
  * 	Create the factory for TriData
  */
-Factory::Factory(uint coupleSPCount, uint tripletCount, uint tripletConceptCount, uint maxPredicat, uint maxInstance, uint maxConcepts){
+RDFStoreFactory::RDFStoreFactory(uint coupleSPCount, uint tripletCount, uint tripletConceptCount, uint maxPredicat, uint maxInstance, uint maxConcepts){
 	this->Bp = new BitString(coupleSPCount);
 	this->Bo = new BitString(tripletCount);
 	this->Bc = new BitString(tripletCount);
@@ -39,7 +39,11 @@ Factory::Factory(uint coupleSPCount, uint tripletCount, uint tripletConceptCount
 /**
  * Add a triplet to the factory
  */
-void Factory::addTriplet(uint subject, uint predicat, uint object, bool isConcept){
+void RDFStoreFactory::addTriplet(uint subject, uint predicat, uint object){
+	bool isConcept = false;
+	if(predicat==0)
+		isConcept = true;
+
 	testParameters(subject, predicat, object, isConcept);
 
 	/**
@@ -88,7 +92,7 @@ void Factory::addTriplet(uint subject, uint predicat, uint object, bool isConcep
 /**
  * Renvoi true si tout les paramètres sont bon
  */
-void Factory::testParameters(uint s, uint p, uint o, bool isConcept){
+void RDFStoreFactory::testParameters(uint s, uint p, uint o, bool isConcept){
 
 	// Good sort tests
 	if(s<previousSubject)
@@ -143,7 +147,7 @@ void Factory::testParameters(uint s, uint p, uint o, bool isConcept){
  * Get the core TriData
  * return a well construct TriData
  */
-TriData* Factory::get(){
+TriData* RDFStoreFactory::get(){
 	return new TriData(makeBitSequence(*Bp), makeBitSequence(*Bo), makeBitSequence(*Bc), makeTree(*WTp), makeTree(*WToi), makeTree(*WToc));
 }
 
@@ -152,7 +156,7 @@ TriData* Factory::get(){
  * 	Builds a Wavelet Tree with an array
  *  @param array to create the waveletTree
  */
-WaveletTree* Factory::makeTree(Array array){
+WaveletTree* RDFStoreFactory::makeTree(Array array){
 
 	/* BitSequence builder for BitSequenceRG */
 	BitSequenceBuilder *bitSequenceBuilder = new BitSequenceBuilderRG(RGFactor);
@@ -179,7 +183,7 @@ WaveletTree* Factory::makeTree(Array array){
 /**
  *	Make a bitSequence with a bitString
  */
-BitSequence* Factory::makeBitSequence(BitString bitString){
+BitSequence* RDFStoreFactory::makeBitSequence(BitString bitString){
 	return new BitSequenceRG(bitString, BitSequenceSampleRate);
 }
 

@@ -9,7 +9,9 @@
 
 
 #include "TriData.h"
+#include "RDFStoreFactory.h"
 #include "Exception.h"
+
 
 using namespace std;
 

@@ -1,4 +1,7 @@
 
+#ifndef STATIC_RDFStoreFactory_H
+#define STATIC_RDFStoreFactory_H
+
 #include <libcdsBasics.h>
 #include <BitSequence.h>
 #include <BitSequenceBuilder.h>
@@ -11,11 +14,13 @@
 #include "TriData.h"
 #include "Exception.h"
 
+
+
 using namespace std;
 
 namespace cds_static
 {
-	class Factory
+	class RDFStoreFactory
 	{
 
 		public:
@@ -25,14 +30,17 @@ namespace cds_static
 		 * 	Create the factory for TriData
 		 * 	@param coupleSPCount number of couple subject/predicate
 		 * 	@param tripletCount number of triplets
-		 * 	@param maxValue max value of triplets
+		 * 	@param tripletConceptCount number of triplet with a concept as object
+		 * 	@param maxPredicat max value of a predicate
+		 * 	@param maxInstance max value of an instance
+		 * 	@param maxConcepts max value of a concept
 		 */
-		Factory(uint coupleSPCount, uint tripletCount, uint tripletConceptCount, uint maxPredicat, uint maxInstance, uint maxConcepts);
+		RDFStoreFactory(uint coupleSPCount, uint tripletCount, uint tripletConceptCount, uint maxPredicat, uint maxInstance, uint maxConcepts);
 
 		/**
 		 * Add a triplet to the factory
 		 */
-		void addTriplet(uint s, uint p, uint o, bool isConcept);
+		void addTriplet(uint subject, uint predicat, uint object);
 
 		/**
 		 * Get the core TriData
@@ -124,3 +132,5 @@ namespace cds_static
 		void testParameters(uint s, uint p, uint o, bool isConcept);
 	};
 }
+
+#endif
