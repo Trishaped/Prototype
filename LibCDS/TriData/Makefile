@@ -7,7 +7,8 @@ LIB=../libcds-v1.0.13/lib/libcds.a
 # To debug in LibCDS we have to compile object by ourself 
 DEBUG_LIB = src/static/sequence/WaveletTree.o src/static/sequence/wt_coder_binary.o src/static/sequence/wt_node_internal.o 
 
-OBJECTS= TriData.o Factory.o testFactory.o FileReader.o
+OBJECTS= TriData.o Factory.o FileReader.o
+TESTS = testFactory.o testImport.o
 BIN= testFactory testImport
 
 
@@ -16,17 +17,17 @@ BIN= testFactory testImport
 	@$(CPP) $(CPPFLAGS) $(INCS) -c $< -o $@
 
 
-all: clean $(DEBUG_LIB) $(OBJECTS) $(BIN)
+all: clean $(DEBUG_LIB) $(OBJECTS) $(TESTS) $(BIN)
 	@echo " [MSG] Done compiling tests"
 	@echo " [FLG] $(CPPFLAGS)"
 
 testImport:
 	@echo " [LNK] Building testImport"
-	@$(CPP) $(CPPFLAGS) -o testImport $(OBJECTS) $(DEBUG_LIB) $(LIB)
+	@$(CPP) $(CPPFLAGS) -o testImport testImport.o $(OBJECTS) $(DEBUG_LIB) $(LIB)
 
 testFactory:
 	@echo " [LNK] Building testFactory"
-	@$(CPP) $(CPPFLAGS) -o testFactory $(OBJECTS) $(DEBUG_LIB) $(LIB)
+	@$(CPP) $(CPPFLAGS) -o testFactory testFactory.o $(OBJECTS) $(DEBUG_LIB) $(LIB)
 	
 	
 
@@ -37,4 +38,4 @@ testFactory:
 	
 clean:
 	@echo " [CLN] Cleaning object and binary files"
-	@rm -f $(OBJECTS) $(BIN)
+	@rm -f $(OBJECTS) $(TESTS) $(BIN)
