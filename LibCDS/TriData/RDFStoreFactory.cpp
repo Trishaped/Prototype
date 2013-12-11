@@ -7,7 +7,7 @@ namespace cds_static
 /**
  * 	Create the factory for TriData
  */
-RDFStoreFactory::RDFStoreFactory(uint coupleSPCount, uint tripletCount, uint tripletConceptCount, uint maxPredicat, uint maxInstance, uint maxConcepts){
+RDFStoreFactory::RDFStoreFactory(uint tripletCount, uint coupleSPCount, uint tripletConceptCount, uint maxPredicat, uint maxInstance, uint maxConcepts){
 	this->Bp = new BitString(coupleSPCount);
 	this->Bo = new BitString(tripletCount);
 	this->Bc = new BitString(tripletCount);
@@ -44,26 +44,27 @@ void RDFStoreFactory::addTriplet(uint subject, uint predicat, uint object){
 	if(predicat==0)
 		isConcept = true;
 
-	testParameters(subject, predicat, object, isConcept);
-
 	/**
 	 * Diff with previous values
 	 */
 	bool isDifferentSubject = (previousSubject!=subject || BpCurrentIndex==0);
+	bool isDifferentPredicat = (previousPredicat!=predicat || BpCurrentIndex==0);
+	bool isDifferentObject = (previousObject!=predicat || BcCurrentIndex==0);
+
+	testParameters(subject, predicat, object, isConcept, isDifferentSubject, isDifferentPredicat, isDifferentObject);
+
+	/**
+	 * Update the previous value
+	 */
 	if(isDifferentSubject)
 		previousSubject = subject;
-
-	bool isDifferentPredicat = (previousPredicat!=predicat || BoCurrentIndex==0);
-	if(isDifferentSubject)
+	if(isDifferentPredicat)
 		previousPredicat = predicat;
-
-	bool isDifferentObject = (previousObject!=predicat || BcCurrentIndex==0);
 	if(isDifferentObject)
 		previousObject = object;
 
-
 	/**
-	 * Only if its a different predicat, we modify the first layer
+	 * Only if its a different predicat, we add it to the first layer
 	 */
 	if(isDifferentPredicat){
 		// Subjects Bitmap
@@ -92,7 +93,7 @@ void RDFStoreFactory::addTriplet(uint subject, uint predicat, uint object){
 /**
  * Renvoi true si tout les paramètres sont bon
  */
-void RDFStoreFactory::testParameters(uint s, uint p, uint o, bool isConcept){
+void RDFStoreFactory::testParameters(uint s, uint p, uint o, bool isConcept, bool isDifferentSubject, bool isDifferentPredicat, bool isDifferentObject){
 
 	// Good sort tests
 	if(s<previousSubject)
@@ -115,28 +116,29 @@ void RDFStoreFactory::testParameters(uint s, uint p, uint o, bool isConcept){
 
 
 	//Overflow on bitmaps
-	if(BpCurrentIndex > Bp->getLength())
-		throw new Exception(Stream() <<  "Overflow on predicates bitmap (Triplet: " << s << ", " << p << ", " << o << ")");
-	if(BoCurrentIndex > Bo->getLength())
-		throw new Exception(Stream() <<  "Overflow on objects bitmap (Triplet: " << s << ", " << p << ", " << o << ")");
-	if(BcCurrentIndex > Bc->getLength())
-		throw new Exception(Stream() <<  "Overflow on concepts bitmap (Triplet: " << s << ", " << p << ", " << o << ")");
+	if(isDifferentPredicat && BpCurrentIndex >= coupleSPCount)
+		throw new Exception(Stream() <<  "Overflow on predicates bitmap, problem with coupleSPCount? (Triplet: " << s << ", " << p << ", " << o << ")");
+	if(BoCurrentIndex >= tripletCount)
+		throw new Exception(Stream() <<  "Overflow on objects bitmap, problem with tripletCount? (Triplet: " << s << ", " << p << ", " << o << ")");
+	if(BcCurrentIndex >= tripletCount)
+		throw new Exception(Stream() <<  "Overflow on concepts bitmap, problem with tripletCount? (Triplet: " << s << ", " << p << ", " << o << ")");
 
 	//Overflow on trees
-	if(WTpCurrentIndex > WTp->getLength())
-		throw new Exception(Stream() <<  "Overflow on predicates tree (Triplet: " << s << ", " << p << ", " << o << ")");
-	if(WToiCurrentIndex > WToi->getLength())
-			throw new Exception(Stream() <<  "Overflow on instances tree (Triplet: " << s << ", " << p << ", " << o << ")");
-	if(WTocCurrentIndex > WToc->getLength())
-			throw new Exception(Stream() <<  "Overflow on concepts tree (Triplet: " << s << ", " << p << ", " << o << ")");
+	if(isDifferentPredicat && WTpCurrentIndex > coupleSPCount)
+		throw new Exception(Stream() <<  "Overflow on predicates tree, problem with coupleSPCount? (Triplet: " << s << ", " << p << ", " << o << ")");
+	if(!isConcept && WToiCurrentIndex >= tripletCount - tripletConceptCount)
+		throw new Exception(Stream() <<  "Overflow on instances tree, problem with tripletCount or tripletConceptCount? (Triplet: " << s << ", " << p << ", " << o << ")");
+	if(isConcept && WTocCurrentIndex >= tripletConceptCount)
+		throw new Exception(Stream() <<  "Overflow on concepts tree, problem with tripletConceptCount? (Triplet: " << s << ", " << p << ", " << o << ")");
 
 	//value superior to max value on trees
 	if(p > maxPredicat)
-		throw new Exception(Stream() <<  "Predicate (" << p << ") superior to maxValue (" << maxPredicat << ") on predicates tree (Triplet: " << s << ", " << p << ", " << o << ")");
-	if(isConcept && o > maxConcepts)
-		throw new Exception(Stream() <<  "Concept (" << o << ") superior to maxValue (" << maxConcepts << ") on concepts tree (Triplet: " << s << ", " << p << ", " << o << ")");
+		throw new Exception(Stream() <<  "Predicate (" << p << ") superior to maxPredicate (" << maxPredicat << ") on predicates tree (Triplet: " << s << ", " << p << ", " << o << ")");
 	else if(!isConcept && o > maxInstance)
-		throw new Exception(Stream() <<  "Instance (" << o << ") superior to maxValue (" << maxInstance << ") on instances tree (Triplet: " << s << ", " << p << ", " << o << ")");
+		throw new Exception(Stream() <<  "Instance (" << o << ") superior to maxInstance (" << maxInstance << ") on instances tree (Triplet: " << s << ", " << p << ", " << o << ")");
+	if(isConcept && o > maxConcepts)
+		throw new Exception(Stream() <<  "Concept (" << o << ") superior to maxConcept (" << maxConcepts << ") on concepts tree (Triplet: " << s << ", " << p << ", " << o << ")");
+
 
 	/*
 	 * TODO other tests

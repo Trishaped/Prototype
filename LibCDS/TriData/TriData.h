@@ -20,6 +20,8 @@ namespace cds_static
 		uint subject;
 		uint predicat;
 		uint object;
+		/* Used to print a triplet */
+		friend ostream& operator<<(ostream& os, const cds_static::Triplet& triplet);
 	};
 
 	/**
@@ -46,7 +48,10 @@ namespace cds_static
 		 * access method on the structure
 		 * @param pos: triplet position in the structure
 		 */
-		Triplet* access(uint pos);
+		Triplet& access(uint pos);
+
+
+		uint nbTriplet;
 
 		protected:
 

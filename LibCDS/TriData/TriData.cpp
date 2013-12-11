@@ -4,6 +4,12 @@
 namespace cds_static
 {
 
+/* Used to print a triplet */
+ostream& operator<<(std::ostream& stream, const cds_static::Triplet& triplet) {
+	stream << "(" << triplet.subject << ", " << triplet.predicat << ", " << triplet.object << ")";
+    return stream;
+ }
+
 /**
  * 	Constructor for TriData core
  * 	See Factory for construction details
@@ -23,8 +29,8 @@ TriData::TriData(BitSequence* Bp, BitSequence* Bo, BitSequence* Bc, WaveletTree*
  * access method on the structure
  * @param pos: triplet position in the structure
  */
-Triplet* TriData::access(uint pos){
-	Triplet* triplet = new Triplet();
+Triplet& TriData::access(uint pos){
+	Triplet *triplet = new Triplet();
 
 	/*	We begin by the bottom of the data structure */
 	bool isConcept = Bc->access(pos);
@@ -40,7 +46,7 @@ Triplet* TriData::access(uint pos){
 	triplet->predicat = WTp->access(nbPre-1);
 	triplet->subject = Bp->rank1(nbPre-1);
 
-	return triplet;
+	return *triplet;
 }
 
 

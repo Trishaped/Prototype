@@ -35,7 +35,7 @@ namespace cds_static
 		 * 	@param maxInstance max value of an instance
 		 * 	@param maxConcepts max value of a concept
 		 */
-		RDFStoreFactory(uint coupleSPCount, uint tripletCount, uint tripletConceptCount, uint maxPredicat, uint maxInstance, uint maxConcepts);
+		RDFStoreFactory(uint tripletCount, uint coupleSPCount, uint tripletConceptCount, uint maxPredicat, uint maxInstance, uint maxConcepts);
 
 		/**
 		 * Add a triplet to the factory
@@ -129,7 +129,7 @@ namespace cds_static
 		/**
 		 * Test the added triplet
 		 */
-		void testParameters(uint s, uint p, uint o, bool isConcept);
+		void testParameters(uint s, uint p, uint o, bool isConcept, bool isDifferentSubject, bool isDifferentPredicat, bool isDifferentObject);
 	};
 }
 
