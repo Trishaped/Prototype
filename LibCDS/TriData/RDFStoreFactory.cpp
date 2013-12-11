@@ -149,8 +149,8 @@ void RDFStoreFactory::testParameters(uint s, uint p, uint o, bool isConcept, boo
  * Get the core TriData
  * return a well construct TriData
  */
-TriData* RDFStoreFactory::get(){
-	return new TriData(makeBitSequence(*Bp), makeBitSequence(*Bo), makeBitSequence(*Bc), makeTree(*WTp), makeTree(*WToi), makeTree(*WToc));
+RDFStore* RDFStoreFactory::get(){
+	return new RDFStore(makeBitSequence(*Bp), makeBitSequence(*Bo), makeBitSequence(*Bc), makeTree(*WTp), makeTree(*WToi), makeTree(*WToc));
 }
 
 

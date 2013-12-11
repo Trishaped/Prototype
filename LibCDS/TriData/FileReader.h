@@ -8,7 +8,7 @@
 #include <Sequence.h>
 
 
-#include "TriData.h"
+#include "RDFStore.h"
 #include "RDFStoreFactory.h"
 #include "Exception.h"
 
@@ -21,7 +21,7 @@ namespace cds_static
 	{
 
 	public:
-		TriData *readFile(const char* fileName);
+		RDFStore *readFile(const char* fileName);
 
 	};
 }

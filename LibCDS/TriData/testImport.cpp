@@ -3,7 +3,7 @@
 #include <Mapper.h>
 #include <Sequence.h>
 
-#include "TriData.h"
+#include "RDFStore.h"
 #include "RDFStoreFactory.h"
 #include "FileReader.h"
 
@@ -15,7 +15,7 @@ int main(int argc, char ** argv) {
 	try{
 		FileReader fr;
 		//fr.readFile("triplets.txt");
-		TriData* data = fr.readFile("TriData/triplets.txt");	//FAIL: Eclipse lance l'exe depuis la racine du projet
+		RDFStore* data = fr.readFile("TriData/triplets.txt");	//FAIL: Eclipse lance l'exe depuis la racine du projet
 
 
 		cout << "test: " << data->access(0) << endl;

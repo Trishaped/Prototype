@@ -3,8 +3,8 @@
 
 namespace cds_static {
 
-TriData *FileReader::readFile(const char* fileName) {
-	TriData *triData = NULL;
+RDFStore *FileReader::readFile(const char* fileName) {
+	RDFStore *rdfStore = NULL;
 	string line;
 	ifstream file(fileName);
 
@@ -30,14 +30,14 @@ TriData *FileReader::readFile(const char* fileName) {
 		if(i!=tripletCount)
 			throw new Exception(Stream() << "Unexpected end of file: " << fileName);
 
-		triData = factory.get();
+		rdfStore = factory.get();
 
 		file.close();
 	} else {
 		throw new Exception(Stream() << "Error opening the file: " << fileName);
 	}
 
-	return triData;
+	return rdfStore;
 }
 
 }

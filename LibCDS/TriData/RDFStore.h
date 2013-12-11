@@ -1,5 +1,5 @@
-#ifndef STATIC_DATA_H
-#define STATIC_DATA_H
+#ifndef STATIC_RDFStore_H
+#define STATIC_RDFStore_H
 
 #include <libcdsBasics.h>
 #include <BitSequence.h>
@@ -34,7 +34,7 @@ namespace cds_static
 	 * 	TriData() //Use Factory to do that
 	 * 	access(i)
 	 */
-	class TriData
+	class RDFStore
 	{
 		public:
 
@@ -42,7 +42,7 @@ namespace cds_static
 		 * 	Constructor for TriData core
 		 * 	See Factory for construction details
 		 */
-		TriData(BitSequence* Bp, BitSequence* Bo, BitSequence* Bc, WaveletTree* Wtp, WaveletTree* WToi, WaveletTree* WToc);
+		RDFStore(BitSequence* Bp, BitSequence* Bo, BitSequence* Bc, WaveletTree* Wtp, WaveletTree* WToi, WaveletTree* WToc);
 
 		/**
 		 * access method on the structure

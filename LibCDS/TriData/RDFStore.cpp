@@ -1,5 +1,5 @@
 
-#include "TriData.h"
+#include "RDFStore.h"
 
 namespace cds_static
 {
@@ -14,7 +14,7 @@ ostream& operator<<(std::ostream& stream, const cds_static::Triplet& triplet) {
  * 	Constructor for TriData core
  * 	See Factory for construction details
  */
-TriData::TriData(BitSequence* Bp, BitSequence* Bo, BitSequence* Bc, WaveletTree* WTp, WaveletTree* WToi, WaveletTree* WToc){
+RDFStore::RDFStore(BitSequence* Bp, BitSequence* Bo, BitSequence* Bc, WaveletTree* WTp, WaveletTree* WToi, WaveletTree* WToc){
 	this->Bp = Bp;
 	this->Bo = Bo;
 	this->Bc = Bc;
@@ -29,7 +29,7 @@ TriData::TriData(BitSequence* Bp, BitSequence* Bo, BitSequence* Bc, WaveletTree*
  * access method on the structure
  * @param pos: triplet position in the structure
  */
-Triplet& TriData::access(uint pos){
+Triplet& RDFStore::access(uint pos){
 	Triplet *triplet = new Triplet();
 
 	/*	We begin by the bottom of the data structure */

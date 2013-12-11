@@ -11,7 +11,7 @@
 #include <Mapper.h>
 #include <Sequence.h>
 
-#include "TriData.h"
+#include "RDFStore.h"
 #include "Exception.h"
 
 
@@ -46,7 +46,7 @@ namespace cds_static
 		 * Get the core TriData
 		 * return a well construct TriData
 		 */
-		TriData *get();
+		RDFStore *get();
 
 
 

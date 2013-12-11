@@ -3,7 +3,7 @@
 #include <Mapper.h>
 #include <Sequence.h>
 
-#include "TriData.h"
+#include "RDFStore.h"
 #include "RDFStoreFactory.h"
 #include "FileReader.h"
 
@@ -38,7 +38,7 @@ int main(int argc, char ** argv) {
 		factory->addTriplet(3 ,2 , 4);
 
 		/*	Make the Core */
-		TriData* triData = factory->get();
+		RDFStore* triData = factory->get();
 
 		/*	Some tests	*/
 		for(uint i=0; i<tripletsCount; i++){
